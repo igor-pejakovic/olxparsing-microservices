@@ -14,6 +14,7 @@ const Item = mongoose.model('Item', {
     itemId: {
         type: Number,
         required: true,
+        index: true,
     },
     title: {
         type: String,

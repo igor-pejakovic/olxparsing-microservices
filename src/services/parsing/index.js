@@ -1,6 +1,8 @@
 require('dotenv').config()
 const amqp = require('amqplib/callback_api')
-console.log()
+const parser = require('./parser')
+const validator = require('validator')
+
 amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AMQP_SERVICE_PARSING_PORT}`, (error0, connection) => {
     if (error0) {
         throw error0
@@ -17,8 +19,13 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
 
         console.log('Parsing queue started.')
 
-        channel.consume(queue, (msg) => {
+        channel.consume(queue, async (msg) => {
             console.log(msg.content.toString())
+            var message = msg.content.toString()
+            if(validator.isURL(message)) {
+                console.log(await parser.parse(message))
+            }
+            
         }, {
             noAck: true
         })

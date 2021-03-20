@@ -11,7 +11,8 @@ const Task = mongoose.model('Task', {
             if(!validator.isURL(value)) {
                 throw new Error('URL is invalid.')
             }
-        }
+        },
+        index: true
     },
     createdOn: {
         type: Date,
