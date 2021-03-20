@@ -9,6 +9,7 @@
   "author": "Igor Pejakovic",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.7.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.12.1",

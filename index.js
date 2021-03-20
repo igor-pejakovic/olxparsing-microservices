@@ -1,5 +1,5 @@
 require('dotenv').config()
-require('./src/db/mongoose')
+require('./src/config/db/mongoose')
 const express = require('express')
 const taskRouter = require('./src/routes/task')
 
