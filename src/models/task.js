@@ -10,6 +10,7 @@ const Task = mongoose.model('Task', {
             if(!validator.isURL(value)) {
                 throw new Error('URL is invalid.')
             }
+        }
     },
     createdOn: {
         type: Date,
@@ -17,18 +18,23 @@ const Task = mongoose.model('Task', {
     },
     lastUpdated: {
         type: Date,
-        required: true,
-        default: Date.now()
+        default: Date.now(),
+        validate(value) {
+            if(!validator.isDate(value)) {
+                throw new Error('Date is invalid.')
+            }
+        }
     },
     pagesToCheck:{
         type: Number,
+        required: true,
         default: 5,
         validate(value) {
             if(value < 1) {
                 throw new Error('pagesToCheck must be greater than 0.')
             }
         }
-    }}
+    }
 })
 
 module.exports = Task
