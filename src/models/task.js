@@ -6,6 +6,7 @@ const Task = mongoose.model('Task', {
         type: String,
         required: true,
         trim: true,
+        unique: true,
         validate(value) {
             if(!validator.isURL(value)) {
                 throw new Error('URL is invalid.')
