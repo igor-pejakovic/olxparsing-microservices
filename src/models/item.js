@@ -10,6 +10,7 @@ const Item = mongoose.model('Item', {
             if(!validator.isURL(value)) {
                 throw new Error('URL is invalid.')
             }
+        }
     },
     itemId: {
         type: Number,
@@ -22,7 +23,7 @@ const Item = mongoose.model('Item', {
         trim: true
     },
     price: {
-        type: Decimal128
+        type: String
     },
     date: {
         type: Date,
@@ -35,7 +36,7 @@ const Item = mongoose.model('Item', {
     },
     task:{
         type: mongoose.Schema.Types.ObjectId, ref:'Task'
-    }}
+    }
 })
 
 module.exports = Item

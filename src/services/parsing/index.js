@@ -1,7 +1,9 @@
 require('dotenv').config()
+require('../../config/db/mongoose')
 const amqp = require('amqplib/callback_api')
 const parser = require('./parser')
 const validator = require('validator')
+const itemController = require('../../controllers/item/index')
 
 amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AMQP_SERVICE_PARSING_PORT}`, (error0, connection) => {
     if (error0) {
@@ -23,7 +25,10 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
             console.log(msg.content.toString())
             var message = msg.content.toString()
             if(validator.isURL(message)) {
-                console.log(await parser.parse(message))
+                var items = await parser.parse(message)
+                items.forEach( (item) => {
+                    itemController.addOrUpdate(item)
+                })
             }
             
         }, {
