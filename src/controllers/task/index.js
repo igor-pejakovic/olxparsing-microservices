@@ -30,3 +30,16 @@ exports.getOldestTask = async function(req, res, next) {
         res.status(400).send(e)
     }
 }
+
+exports.findTask = async function(req, res, next) {
+    try {
+        var task = await Tasks.findOne({URL : req.body.URL})
+        if(task) {
+            res.status(200).send(task)
+        } else {
+            res.status(404)
+        }
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}
