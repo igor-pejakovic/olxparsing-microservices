@@ -37,6 +37,19 @@ const Item = mongoose.model('Item', {
     task:{
         type: mongoose.Schema.Types.ObjectId, 
         ref:'Task'
+    },
+    hits: {
+        type: Number
+    },
+    seller: {
+        type: String
+    },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    location: {
+        type: String
     }
 })
 
