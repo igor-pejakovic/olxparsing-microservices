@@ -9,7 +9,7 @@ exports.addOrUpdate = async function(itemData) {
             exists.date = itemData.date
             exists.title = itemData.title
 
-            await exists.save()
+            await exists.update()
             return exists
         } else {
             const newItem = new Items(itemData)

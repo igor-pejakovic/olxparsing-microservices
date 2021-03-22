@@ -22,11 +22,12 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
         console.log('Parsing queue started.')
 
         channel.consume(queue, async (msg) => {
-            console.log(msg.content.toString())
             var message = msg.content.toString()
+            console.log(`Recieved from queue ${message}`)
             if(validator.isURL(message)) {
                 var items = await parser.parse(message)
                 items.forEach( (item) => {
+                    item.task = msg.properties.task
                     itemController.addOrUpdate(item)
                 })
             }

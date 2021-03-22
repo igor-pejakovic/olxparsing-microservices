@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:parsing": "node src/services/parsing",
+    "start:task-scheduling": "node src/services/task-scheduling",
+    "start:server": "node index",
+    "startall": "npm-run-all start:*"
   },
   "author": "Igor Pejakovic",
   "license": "ISC",
@@ -16,5 +20,8 @@
     "jsdom": "^16.5.1",
     "mongoose": "^5.12.1",
     "validator": "^13.5.2"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }
