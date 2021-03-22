@@ -4,6 +4,7 @@ const amqp = require('amqplib/callback_api')
 const parser = require('./parser')
 const validator = require('validator')
 const itemController = require('../../controllers/item/index')
+const taskController = require('../../controllers/task')
 
 amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AMQP_SERVICE_PARSING_PORT}`, (error0, connection) => {
     if (error0) {
@@ -22,12 +23,12 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
         console.log('Parsing queue started.')
 
         channel.consume(queue, async (msg) => {
-            var message = msg.content.toString()
-            console.log(`Recieved from queue ${message}`)
-            if(validator.isURL(message)) {
-                var items = await parser.parse(message)
-                items.forEach( (item) => {
-                    item.task = msg.properties.task
+            var message = JSON.parse(msg.content.toString())
+            console.log(`Recieved from queue ${message.URL}`)
+            if(validator.isURL(message.URL)) {
+                var items = await parser.parse(message.URL)
+                items.forEach( async (item) => {
+                    item.task = message.taskId
                     itemController.addOrUpdate(item)
                 })
             }
@@ -38,3 +39,5 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
     }
     )
 })
+
+function parseFromURL() {}

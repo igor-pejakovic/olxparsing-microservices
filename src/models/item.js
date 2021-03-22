@@ -35,7 +35,8 @@ const Item = mongoose.model('Item', {
         default: Date.now()
     },
     task:{
-        type: mongoose.Schema.Types.ObjectId, ref:'Task'
+        type: mongoose.Schema.Types.ObjectId, 
+        ref:'Task'
     }
 })
 

@@ -23,11 +23,14 @@ amqp.connect((`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.A
 
 function sexyBack(queue, channel) {
     return async function cback() {
-        setTimeout(cback, 5000)
+        setTimeout(cback, 30000)
         try {
             var currentTask = await taskController.oldestTask()
             if (currentTask) {
-                channel.sendToQueue(queue, Buffer.from(currentTask.URL), { task: currentTask})
+                channel.sendToQueue(queue, Buffer.from(JSON.stringify({
+                    taskId: currentTask._id,
+                    URL: currentTask.URL
+                })))
                 console.log(`Sent to queue ${currentTask.URL}`)
             }
         } catch (e) {

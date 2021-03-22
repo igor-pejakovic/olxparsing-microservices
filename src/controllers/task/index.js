@@ -17,6 +17,10 @@ exports.postTask = async function(req, res, next) {
     }
 }
 
+exports.findById = async function(id) {
+    return await Tasks.findById(id)
+}
+
 exports.getOldestTask = async function(req, res, next) {
     try {
         // Returns oldest task ordered by lastUpdated
