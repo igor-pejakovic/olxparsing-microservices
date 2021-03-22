@@ -50,6 +50,10 @@ const Item = mongoose.model('Item', {
     },
     location: {
         type: String
+    },
+    lastCrawled: {
+        type: Date,
+        default: Date.now()
     }
 })
 
