@@ -23,16 +23,7 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
         console.log('Parsing queue started.')
 
         channel.consume(queue, async (msg) => {
-            var message = JSON.parse(msg.content.toString())
-            console.log(`Recieved from queue ${message.URL}`)
-            if(validator.isURL(message.URL)) {
-                var items = await parser.parse(message.URL)
-                items.forEach( async (item) => {
-                    item.task = message.taskId
-                    itemController.addOrUpdate(item)
-                })
-            }
-            
+            await parseFromMessage(msg)
         }, {
             noAck: true
         })
@@ -40,4 +31,14 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
     )
 })
 
-function parseFromURL() {}
+async function parseFromMessage(msg) { 
+    var message = JSON.parse(msg.content.toString())
+            //console.log(`Recieved from queue ${message.URL}`)
+            if (validator.isURL(message.URL)) {
+                var items = await parser.parse(message.URL)
+                items.forEach(async (item) => {
+                    item.task = message.taskId
+                    itemController.addOrUpdate(item)
+                })
+            }
+}
