@@ -44,6 +44,9 @@ const Item = mongoose.model('Item', {
     seller: {
         type: String
     },
+    sellerURL: {
+        type: String
+    },
     active: {
         type: Boolean,
         default: true
