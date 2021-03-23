@@ -21,6 +21,21 @@ exports.addOrUpdate = async function(itemData) {
     }
 }
 
+exports.oldestCrawl = async function() {
+    var item = await Items.findOne({}, {}, { sort: { 'lastCrawled' : 1 }})
+    item.lastCrawled = Date.now()
+    await item.updateOne()
+    return item
+}
+
+exports.updateOne = async function(item) {
+    await Items.updateOne(item)
+}
+
+exports.findById = async function(id) {
+    return Items.findById(id)
+}
+
 exports.add = async function(itemData) {
     try {
         const newItem = new Items(itemData)

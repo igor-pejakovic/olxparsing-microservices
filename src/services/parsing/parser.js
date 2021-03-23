@@ -27,6 +27,7 @@ async function parse(url, params = {}) {
 }
 
 exports.parse = parse
+exports.retrieveJsdom = retrieveJsdom
 
 class Item {
     // Private fields that are site-specific
