@@ -21,6 +21,16 @@ exports.addOrUpdate = async function(itemData) {
     }
 }
 
+exports.getTopItems = async function(req, res, next) {
+    try {
+            var result = await Items.find({}, {}, { sort: {'hits' : -1}}).limit(50)
+            res.status(201).send(result)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+
+}
+
 exports.oldestCrawl = async function() {
     var item = await Items.findOne({}, {}, { sort: { 'lastCrawled' : 1 }})
     await item.updateOne({lastCrawled : Date.now()})
