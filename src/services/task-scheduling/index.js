@@ -4,6 +4,9 @@ const taskController = require('../../controllers/task')
 const itemController = require('../../controllers/item')
 const amqp = require('amqplib/callback_api')
 
+const PARSING_DELAY = 10000
+const CRAWLING_DELAY = 1000
+
 
 amqp.connect((`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AMQP_SERVICE_PARSING_PORT}`, function (error0, connection) {
     if (error0) {
@@ -31,7 +34,6 @@ amqp.connect((`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.A
 
 function sexyBack(queue, channel) {
     return async function cback() {
-        setTimeout(cback, 30000)
         try {
             var currentTask = await taskController.oldestTask()
             if (currentTask) {
@@ -40,6 +42,8 @@ function sexyBack(queue, channel) {
                     URL: currentTask.URL
                 })))
                 console.log(`Sent to queue ${currentTask.URL}`)
+                await wait(PARSING_DELAY)
+                cback()
             }
         } catch (e) {
             console.log(e.message)
@@ -62,6 +66,7 @@ function crawlScheduling(queue, channel) {
                 URL: currentItem.URL
             })))
             console.log(`Sent to queue item ${currentItem.URL}`)
+            await wait(CRAWLING_DELAY)
             crawl()
             
         } catch (e) {
