@@ -1,7 +1,7 @@
 const axios = require('axios')
 const { JSDOM } = require('jsdom')
 
-async function retrieveJsdom(url, params = {}){
+async function retrieveJsdom(url, params = {}) {
     const resp = await axios.default.get(url, params)
     return new JSDOM(resp.data)
 }
@@ -11,8 +11,7 @@ function retrieveItemsDom(dom) {
     return dom.window.document.querySelectorAll(ITEMCONTAINER)
 }
 
-function getItemArray(domItems)
-{
+function getItemArray(domItems) {
     result = []
 
     domItems.forEach(item => {
@@ -22,8 +21,28 @@ function getItemArray(domItems)
     return result
 }
 
-async function parse(url, params = {}) {
-    return getItemArray(retrieveItemsDom(await retrieveJsdom(url, params)))
+async function parse(url) {
+    const SPECIAL_SELECTOR = 'div.izdvojen'
+    var hasSpecial = true
+    var result = []
+    var params = {
+        stranica: 1
+    }
+
+    while (hasSpecial) {
+        var pageDom = await retrieveJsdom(url, { params: params })
+        var itemsDom = retrieveItemsDom(pageDom)
+
+        result.push(...getItemArray(itemsDom))
+
+        if (!pageDom.window.document.querySelector(SPECIAL_SELECTOR)) {
+            hasSpecial = false
+        }
+
+        params.stranica += 1
+        console.log(`page ${params.stranica} of ${url}`)
+    }
+    return result
 }
 
 exports.parse = parse
@@ -43,7 +62,7 @@ class Item {
 
     // Takes in JSDOM object
     constructor(itemJsdom) {
-        
+
         const titleItem = itemJsdom.querySelector(this.#TITLESELECTOR)
         const priceItem = itemJsdom.querySelector(this.#PRICESELECTOR)
         const dateItem = itemJsdom.querySelector(this.#DATESELECTOR)
