@@ -42,7 +42,7 @@ async function parseFromMessage(msg) {
 }
 
 async function doParse(message) {
-    var items = await parser.parse(message.URL)
+    var items = await parser.parse(message.URL, message.pagesToCheck)
     items.forEach(async (item) => {
         item.task = message.taskId
         itemController.addOrUpdate(item)

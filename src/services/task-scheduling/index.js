@@ -39,7 +39,8 @@ function sexyBack(queue, channel) {
             if (currentTask) {
                 channel.sendToQueue(queue, Buffer.from(JSON.stringify({
                     taskId: currentTask._id,
-                    URL: currentTask.URL
+                    URL: currentTask.URL,
+                    pagesToCheck: currentTask.pagesToCheck
                 })))
                 console.log(`Sent to queue ${currentTask.URL}`)
                 await wait(PARSING_DELAY)
@@ -51,6 +52,7 @@ function sexyBack(queue, channel) {
     }
 }
 let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 function crawlScheduling(queue, channel) {
     return async function crawl() {
         try {
