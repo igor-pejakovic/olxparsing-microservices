@@ -22,7 +22,9 @@ exports.addOrUpdate = async function(itemData) {
 }
 
 exports.oldestCrawl = async function() {
-    return await Items.findOne({}, {}, { sort: { 'lastCrawled' : 1 }})
+    var item = await Items.findOne({}, {}, { sort: { 'lastCrawled' : 1 }})
+    await item.updateOne({lastCrawled : Date.now()})
+    return item
 }
 
 exports.updateOne = async function(item) {

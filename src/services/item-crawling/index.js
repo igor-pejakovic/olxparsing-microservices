@@ -31,16 +31,17 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_CRAWLING_ADRESS}:${process.env.A
 })
 
 async function crawlFromMessage(msg) { 
+    try {
     var message = JSON.parse(msg.content.toString())
-            if (validator.isURL(message.URL)) {
-                const additionalInfo = await crawler.crawlItem()
-                var item = await itemController.findById(message.itemId)
+    console.log(message)
+    if (validator.isURL(message.URL)) {
+        var item = await itemController.findById(message.itemId)
+        const additionalInfo = await crawler.crawlItem(message.URL)
+        additionalInfo.timesHit = item.timesHit + 1
 
-                for(var attrName in additionalInfo) {
-                    item[attrName] = additionalInfo[attrName]
-                }
-                item.lastCrawled = Date.now()
-
-                itemController.updateOne(item)
-            }
+        await item.updateOne(additionalInfo)
+    }
+    } catch (e) {
+        console.log(e.message)
+    }
 }

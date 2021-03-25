@@ -27,10 +27,11 @@ async function crawlItem(url) {
 
     var hits = hitsQuery.innerHTML
 
-    return Object.freeze({
+
+    return {
         sellerURL: sellerURL,
         seller: seller,
         location: location,
         hits: hits
-    })
+    }
 }

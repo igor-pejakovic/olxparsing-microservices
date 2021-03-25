@@ -56,7 +56,11 @@ const Item = mongoose.model('Item', {
     },
     lastCrawled: {
         type: Date,
-        default: Date.now()
+        default: Date.UTC(0)
+    },
+    timesHit: {
+        type: Number,
+        default: 0
     }
 })
 
