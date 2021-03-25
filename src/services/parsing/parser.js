@@ -21,26 +21,30 @@ function getItemArray(domItems) {
     return result
 }
 
-async function parse(url) {
+async function parse(url, additionalPages = 2) {
     const SPECIAL_SELECTOR = 'div.izdvojen'
-    var hasSpecial = true
     var result = []
     var params = {
         stranica: 1
     }
 
-    while (hasSpecial) {
-        var pageDom = await retrieveJsdom(url, { params: params })
-        var itemsDom = retrieveItemsDom(pageDom)
-
-        result.push(...getItemArray(itemsDom))
-
-        if (!pageDom.window.document.querySelector(SPECIAL_SELECTOR)) {
-            hasSpecial = false
-        }
-
-        params.stranica += 1
+    while (additionalPages > 0) {
         console.log(`page ${params.stranica} of ${url}`)
+        try {
+            var pageDom = await retrieveJsdom(url, { params: params })
+            var itemsDom = retrieveItemsDom(pageDom)
+
+            result.push(...getItemArray(itemsDom))
+
+            if (!pageDom.window.document.querySelector(SPECIAL_SELECTOR)) {
+                additionalPages -= 1
+            }
+
+            params.stranica += 1
+        } catch (e) {
+            console.log(e.message)
+        }
+        
     }
     return result
 }
@@ -69,7 +73,6 @@ class Item {
 
         if (titleItem != null) {
             this.itemId = itemJsdom.id.replace(this.#IDPREFIX, '')
-            console.log(this.itemId)
             this.title = titleItem.text
             this.URL = titleItem.href
             this.price = priceItem.innerHTML

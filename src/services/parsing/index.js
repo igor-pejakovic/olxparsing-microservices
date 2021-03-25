@@ -33,13 +33,11 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AM
     )
 })
 
-let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 async function parseFromMessage(msg) { 
     var message = JSON.parse(msg.content.toString())
     const delay = message.delay ? message.delay: DEFAULT_DELAY
     if (validator.isURL(message.URL)) {
-        await wait(delay)
         await doParse(message)
     }
 }
