@@ -1,7 +1,11 @@
 const Tasks = require('../../models/task')
+const SITE_PREFIX = 'olx.ba/pretraga'
 
 exports.postTask = async function(req, res, next) {
     try {
+        if(!req.body.URL.includes(SITE_PREFIX)) {
+            res.status(400).send({message: 'Invalid URL'})
+        }
         const exists = await Tasks.findOne({URL : req.body.URL})
         if(exists) {
             res.status(303).send(exists)
