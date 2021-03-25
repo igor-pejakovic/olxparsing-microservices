@@ -14,6 +14,10 @@ const Task = mongoose.model('Task', {
         },
         index: true
     },
+    name: {
+        type:String,
+        default: 'Untitled'
+    },
     createdOn: {
         type: Date,
         default: Date.now()

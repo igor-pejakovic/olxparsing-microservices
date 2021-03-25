@@ -5,6 +5,7 @@ exports.postTask = async function(req, res, next) {
     try {
         if(!req.body.URL.includes(SITE_PREFIX)) {
             res.status(400).send({message: 'Invalid URL'})
+            return
         }
         const exists = await Tasks.findOne({URL : req.body.URL})
         if(exists) {
