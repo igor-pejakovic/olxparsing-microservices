@@ -5,7 +5,7 @@ const crawler = require('./crawler')
 const validator = require('validator')
 const itemController = require('../../controllers/item/index')
 
-const DEFAULT_DELAY = 15000
+const DEFAULT_DELAY = 3000
 
 amqp.connect(`amqp://${process.env.AMQP_SERVICE_CRAWLING_ADRESS}:${process.env.AMQP_SERVICE_CRAWLING_PORT}`, (error0, connection) => {
     if (error0) {
@@ -32,12 +32,15 @@ amqp.connect(`amqp://${process.env.AMQP_SERVICE_CRAWLING_ADRESS}:${process.env.A
     )
 })
 
+let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 async function crawlFromMessage(msg) { 
     try {
         var message = JSON.parse(msg.content.toString())
         const delay = message.delay ? message.delay: DEFAULT_DELAY
         if (validator.isURL(message.URL)) {
-            setTimeout(doCrawl(message), delay)
+            await wait(delay)
+            await doCrawl(message)
         }
     } catch (e) {
         console.log(e.message)
@@ -50,4 +53,5 @@ async function doCrawl(message) {
     additionalInfo.timesHit = item.timesHit + 1
 
     await item.updateOne(additionalInfo)
+    console.log(message.itemId)
 }

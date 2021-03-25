@@ -24,7 +24,7 @@ amqp.connect((`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.A
             durable: false
         })
 
-        // sexyBack(queue, channel)()
+        sexyBack(queue, channel)()
         crawlScheduling(queueCrawling, channel)()
     })
 }))
@@ -46,16 +46,15 @@ function sexyBack(queue, channel) {
         }
     }
 }
-
+let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 function crawlScheduling(queue, channel) {
     return async function crawl() {
         try {
             var currentItem = await itemController.oldestCrawl()
             var timeDiff = Math.floor((Date.now() - currentItem.lastCrawled)/(1000*60))
             console.log(timeDiff)
-            if(timeDiff < 1) { // Wait for at least 15 minutes
-                
-                setTimeout(() => {console.log('Crawl Waiting...')}, 15*60*1000)
+            if(timeDiff < 2) { // Wait for at least 2 minutes
+                await wait(2*60*1000)
             }
 
             channel.sendToQueue(queue, Buffer.from(JSON.stringify({
@@ -63,7 +62,7 @@ function crawlScheduling(queue, channel) {
                 URL: currentItem.URL
             })))
             console.log(`Sent to queue item ${currentItem.URL}`)
-            //crawl()
+            crawl()
             
         } catch (e) {
             console.log(e.message)
