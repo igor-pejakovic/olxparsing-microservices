@@ -57,17 +57,19 @@ function crawlScheduling(queue, channel) {
     return async function crawl() {
         try {
             var currentItem = await itemController.oldestCrawl()
-            var timeDiff = Math.floor((Date.now() - currentItem.lastCrawled)/(1000*60))
-            console.log(timeDiff)
-            if(timeDiff < 2) { // Wait for at least 2 minutes
-                await wait(2*60*1000)
-            }
+            if(currentItem) {
+                var timeDiff = Math.floor((Date.now() - currentItem.lastCrawled)/(1000*60))
+                console.log(timeDiff)
+                if(timeDiff < 2) { // Wait for at least 2 minutes
+                    await wait(2*60*1000)
+                }
 
-            channel.sendToQueue(queue, Buffer.from(JSON.stringify({
-                itemId: currentItem._id,
-                URL: currentItem.URL
-            })))
-            console.log(`Sent to queue item ${currentItem.URL}`)
+                channel.sendToQueue(queue, Buffer.from(JSON.stringify({
+                    itemId: currentItem._id,
+                    URL: currentItem.URL
+                })))
+                console.log(`Sent to queue item ${currentItem.URL}`)
+            }
             await wait(CRAWLING_DELAY)
             crawl()
             
