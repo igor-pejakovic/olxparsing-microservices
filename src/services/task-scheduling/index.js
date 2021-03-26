@@ -4,7 +4,7 @@ const taskController = require('../../controllers/task')
 const itemController = require('../../controllers/item')
 const amqp = require('amqplib/callback_api')
 
-const PARSING_DELAY = 10000
+const PARSING_DELAY = 10*60*1000
 const CRAWLING_DELAY = 1000
 
 

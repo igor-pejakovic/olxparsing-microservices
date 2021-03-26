@@ -9,5 +9,3 @@ async function run() {
 }
 
 exports.run = run
-
-run().then(() => {console.log('Insertion complete')})
