@@ -5,7 +5,7 @@ exports.addHit = async function(item, snapshotTime = Date.now()) {
     newHitItem.save()
 }
 
-exports.addAllHits = async function(Items, snapshotTime = Date.now()) {
+exports.addManyHits = async function(Items, snapshotTime = Date.now()) {
     var insertion = []
     const itemsAll = await Items.find()
     itemsAll.forEach( item => {
@@ -13,12 +13,17 @@ exports.addAllHits = async function(Items, snapshotTime = Date.now()) {
     })
 
     ItemHits.insertMany(insertion)
+    console.log(`Insertion of ${insertion.length} elements`)
 }
 
 function hitItemFactory(item, snapshotTime) {
+    var hits = 0
+    if(item.hits) {
+        hits = item.hits - item.timesHit
+    } 
     return new ItemHits({
         itemId: item._id,
-        hits: item.hits - timesHit,
+        hits: hits,
         snapshotTime: snapshotTime
     })
 }
