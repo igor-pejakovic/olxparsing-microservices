@@ -5,7 +5,7 @@ const itemController = require('../../controllers/item')
 const amqp = require('amqplib/callback_api')
 
 const PARSING_DELAY = 10*60*1000
-const CRAWLING_DELAY = 333
+const CRAWLING_DELAY = 150
 
 
 amqp.connect((`amqp://${process.env.AMQP_SERVICE_PARSING_ADRESS}:${process.env.AMQP_SERVICE_PARSING_PORT}`, function (error0, connection) {
@@ -52,6 +52,7 @@ function sexyBack(queue, channel) {
     }
 }
 let wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+var count = 0
 
 function crawlScheduling(queue, channel) {
     return async function crawl() {
@@ -68,7 +69,8 @@ function crawlScheduling(queue, channel) {
                     itemId: currentItem._id,
                     URL: currentItem.URL
                 })))
-                console.log(`Sent to queue item ${currentItem.URL}`)
+                count += 1
+                console.log(`Sent to queue item ${currentItem.URL} nr ${count}`)
             }
             await wait(CRAWLING_DELAY)
             crawl()
