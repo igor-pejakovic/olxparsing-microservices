@@ -37,30 +37,6 @@ const Item = mongoose.model('Item', {
     task:{
         type: mongoose.Schema.Types.ObjectId, 
         ref:'Task'
-    },
-    hits: {
-        type: Number
-    },
-    seller: {
-        type: String
-    },
-    sellerURL: {
-        type: String
-    },
-    active: {
-        type: Boolean,
-        default: true
-    },
-    location: {
-        type: String
-    },
-    lastCrawled: {
-        type: Date,
-        default: Date.UTC(0)
-    },
-    timesHit: {
-        type: Number,
-        default: 0
     }
 })
 
